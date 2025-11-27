@@ -599,11 +599,14 @@ if st.session_state["drugs"]:
         c.save()
         pdf_buffer.seek(0)
         pdf_bytes = pdf_buffer.getvalue()
-    except ImportError:
+    except Exception:
+        # On Streamlit Cloud or environments without Kaleido/Chrome or ReportLab support
         st.info(
-            "To enable PDF export of the timeline, install 'kaleido' and 'reportlab' "
-            "via: pip3 install kaleido reportlab"
+            "PDF export of the timeline is not available in this environment. "
+            "If running locally, install 'kaleido' and 'reportlab' via "
+            "`pip install kaleido reportlab`."
         )
+        pdf_bytes = None
 
     if pdf_bytes:
         filename_base = patient_id or "scar_case"
